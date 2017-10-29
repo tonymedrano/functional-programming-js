@@ -1,0 +1,21 @@
+{
+    "personas": [{
+        "nombre": "Tony",
+        "apellido": "Medrano",
+        "edad": 44,
+        "profesion": "Programador",
+        "hobbies": ["jugar, bailar, cantar, dibujar, programar"]
+    }, {
+        "nombre": "Pilar",
+        "apellido": "Gutiérrez",
+        "edad": 45,
+        "profesion": "Ama de Casa/Emprendedora",
+        "hobbies": ["ver la tele, manualidades, charlar, investigar, ir a cenar"]
+    }, {
+        "nombre": "Magali",
+        "apellido": "Medrano",
+        "edad": 11,
+        "profesion": "Estudiante/Pianista/Bailarina",
+        "hobbies": ["jugar, bailar, cantar, dibujar, ver la tele, estudiar"]
+    }]
+}
