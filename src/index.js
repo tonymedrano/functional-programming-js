@@ -1,5 +1,5 @@
 import data from "./data.json"
-import books from "./addressbook.json"
+import books from "./apressbooks.json"
 import {
     printer,
     getPersons,
@@ -69,11 +69,12 @@ getPersons(data, (p) => {
 //     console.log(a * 1000)
 // }))
 
-console.log(array.map(unary(String)))
+printer("Parsing data", array.map(unary(parseInt)))
 
 let num = 1
 let doPayment = once(() => {
-    console.log("Payment is done", num++)
+    printer("Payment is done", num++)
+
 })
 
 doPayment()
@@ -87,18 +88,110 @@ let fastFactorial = memoized((n) => {
     return n * fastFactorial(n - 1)
 })
 
-console.log(fastFactorial(5))
+printer("Factorial of 5", fastFactorial(5))
 
-console.log(arrayUtils.map([1, 2, 3], (x) => x * x))
-
-let addressBook = books.apressBook
-
-arrayUtils.map(addressBook, (book) => {        
-    return { title: book.title, author: book.author }
+//. Map
+arrayUtils.map([1, 2, 3], (x) => {
+    printer("Mapping array", `${x * x}\n`)
 })
 
-forEach(arrayUtils.map(addressBook, (book) => {        
-    return { title: book.title, author: book.author }
-}), (data) => {
-    printer("Apress Book", `${data.title} written by ${data.author}.\n`)
+
+arrayUtils.map(books.apressBooks, (book) => {        
+    printer("Apress Book", `${book.title} written by ${book.author}.\n`)
 })
+
+// console.log(arrayUtils.filter(books.apressBooks, (book) => book.rating[0] > 4.5))
+
+arrayUtils.map(arrayUtils.filter(books.apressBooks, (b) => b.rating[0] > 4.5), (book) => {        
+    printer("Apress Book filtered by rating", `${book.title} written by ${book.author} with ${book.rating.join()} of rating. \n`)
+})
+
+//zip the results
+printer("Reduce func multiplying all values", arrayUtils.reduce(array, (acc, val) => acc * val))
+
+printer("Reduce func summing all values", arrayUtils.reduce(array, (acc, val) => acc + val))
+
+let results = arrayUtils.reduce(books.apressBooks, (acc, bookDetail) => {        
+    let goodReviews = bookDetail.reviews[0] != undefined ? bookDetail.reviews[0].good : 0        
+    let excellentReviews = bookDetail.reviews[0] != undefined ? bookDetail.reviews[0].excellent : 0        
+    return { good: acc.good + goodReviews, excellent: acc.excellent + excellentReviews }
+}, { good: 0, excellent: 0 })
+
+printer("Reduce results", results)
+
+let zip = arrayUtils.zip([1, 2, 3, 0], [4, 5, 6, 9], (x, y) => x + y)
+
+printer("Zip results", zip)
+
+let mergedBookDetails = arrayUtils.zip(books.apressBooks, books.reviewDetails, (book, review) => {
+    if (book.id === review.id) {
+        let clone = Object.assign({}, book)
+        clone.ratings = review  
+        return clone  
+    }
+})
+
+printer("Another Zip results", mergedBookDetails)
+
+//. Logger Helper
+printer("Logger Helper in action", '')
+let log = arrayUtils.loggerHelper
+log("ERROR", "Error At Stats.js", "Invalid argument passed", 23)
+log("ERROR", "Error At Stats.js", "undefined argument", 223)
+log("ERROR", "Error At Stats.js", "curry function is not defined", 3)
+log("WARN", "Error At Stats.js", "slice is not defined", 31)
+
+//. Currying 
+let autoCurriedAdd = arrayUtils.curry((x, y, z, a) => x + y + z * a)
+printer("First Curry results", autoCurriedAdd(2)(2)(5)(9))
+
+printer("Currying in action", arrayUtils.curry((x, y, z) => x * y * z)(1, 2, 3))
+
+let match = arrayUtils.curry((expr, str) => {
+    return str.match(expr)
+})
+
+let filter = arrayUtils.curry((f, ary) => {  
+    return ary.filter(f)
+})
+
+let hasNumber = match(/[0-9]+/)
+let findNumbersInArray = filter(hasNumber)
+printer("Currying in action", findNumbersInArray(["js", "number1"]))
+
+let map = arrayUtils.curry((f, ary) => {  
+    return ary.map(f)
+})
+
+let squareAll = map((x) => x * x)
+printer("Currying square [1,2,3]", squareAll([1, 2, 3]))
+
+
+const setTimeoutWrapper = (time, fn) => {  
+    setTimeout(fn, time);
+}
+
+const delayTenMs = arrayUtils.curry(setTimeoutWrapper)(20)
+delayTenMs(() => console.log("Do X task"))
+delayTenMs(() => console.log("Do Y task"))
+
+const addCurried = x => y => x + y //. => fn => 4 + y
+
+/* const addCurried = (x) => {
+    return (y) => {
+        return x + y
+    }
+}*/
+
+console.log("Simple curry: ", addCurried(4)(4))
+
+const add = (x, y) => x + y
+const myCurried = fn => a => b => fn(a, b) //.
+
+let myCurriedAdd = myCurried(add)
+
+console.log("My own curry: ", myCurriedAdd(2)(3))
+
+//. Partial
+let newDelayTenMs = arrayUtils.partial(setTimeout, undefined, 10)
+newDelayTenMs(() => console.log("Do the task"))

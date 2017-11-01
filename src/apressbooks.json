@@ -1,5 +1,6 @@
 {
-    "apressBook": [{
+    "name": "beginners",
+    "apressBooks": [{
             "id": 111,
             "title": "C# 6.0",
             "author": "ANDREW TROELSEN",
@@ -44,6 +45,36 @@
                 "good": 14,
                 "excellent": 12
             }]
+        }
+    ],
+    "reviewDetails": [{
+            "id": 111,
+            "reviews": [{ "good": 4, "excellent": 12 }]
+        },
+        {
+            "id": 222,
+            "reviews": []
+        },
+        {
+            "id": 333,
+            "reviews": []
+        }, {
+            "id": 444,
+            "reviews": [{ "good": 14, "excellent": 12 }]
+        }
+    ],
+    "bookDetails": [{
+            "id": 333,
+            "title": "Pro AngularJS",
+            "author": "Adam Freeman",
+            "rating": [4.0],
+            "reviews": []
+        },
+        {
+            "id": 444,
+            "title": "Pro ASP.NET",
+            "author": "Adam Freeman",
+            "rating": [4.2]
         }
     ]
 }
